@@ -7,6 +7,10 @@ public class Constraint<T> {
 		this.tuple = new ArrayList<Variable<T>>();
 	}
 	
+	public String toString() {
+		return "Tuple: " +  tuple.toString();
+	}
+	
 	
 	boolean contains(Variable<T> variable) { //checks if a variable is involved in this constraint
 		if(this.tuple.contains(variable))
@@ -19,6 +23,7 @@ public class Constraint<T> {
 		temp.remove(variable);
 		return temp;
 	}
+	
 
 	public boolean isViolated(ArrayList<Variable<T>> variables, Variable<T> variable){
 		return false;

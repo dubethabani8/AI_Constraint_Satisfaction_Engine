@@ -13,14 +13,14 @@ public class CSP<T> {
 		return this.variables.size();
 	}
 	
-	public Variable<T> removeFromDomain(Variable<T> variable, Value<T> val) {
-		for(Variable<T> var: this.variables) {
-			if(variable.name.equals(var.name)) {
-				var.domain.values.remove(val);
-				return variable;
-			}
-		}
-		return variable;
-	}
+//	public Variable<T> removeFromDomain(Variable<T> variable, Value<T> val) {
+//		for(Variable<T> var: this.variables) {
+//			if(variable.name.equals(var.name)) {
+//				var.domain.values.remove(val);
+//				return variable;
+//			}
+//		}
+//		return variable;
+//	}
 	
 }

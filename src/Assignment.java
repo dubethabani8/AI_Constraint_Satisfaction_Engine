@@ -45,23 +45,83 @@ public class Assignment<T> {
 		return num;
 	}
 	
-	public boolean isConsistent(){
-		for(Variable<T> variable: this.variables) {
-			for(Constraint<T> constraint: this.constraints) {
-				ArrayList<Variable<T>> others = constraint.variablesInvolvedWith(variable);
-				if(constraint.isViolated(others, variable)) return false;
+
+	public boolean isConsistent(CSP<T> csp){
+	for(Variable<T> variable: csp.variables) {
+		Variable<T> tempV = variable;
+		for(Constraint<T> constraint: csp.constraints) {
+			Constraint<T> tempC = constraint;
+			System.out.println("CHECKING CONSTRAINT: " + tempC.toString());
+			ArrayList<Variable<T>> others = new ArrayList<Variable<T>>();
+			if(tempC.contains(tempV)) others = tempC.variablesInvolvedWith(tempV);
+			else continue;
+			System.out.println(tempV.name + " is involved with " + others.toString());
+			//assign vals and check for violations
+			ArrayList<Variable<T>> others2 = new ArrayList<Variable<T>>();
+			
+			for(Variable<T> var: csp.variables) {
+				Variable<T> varTemp = var;
+				for(Variable<T> var2: others) {
+					Variable<T> var2Temp = var2;
+					if(varTemp.name.equals(var2Temp.name)) {
+						var2Temp.value = varTemp.value;
+						others2.add(var2Temp);
+					}
+				}
 			}
+			
+			if(tempC.isViolated(others2, tempV)) return false;
 		}
-		return true;
 	}
+	return true;
+}
 	
-	public boolean isConsistentAddition(Assignment<T> assignment, Value<T> val, Variable<T> var) {
+	
+//	public boolean isConsistent(){
+//		for(Variable<T> variable: this.variables) {
+//			Variable<T> tempV = variable;
+//			for(Constraint<T> constraint: this.constraints) {
+//				Constraint<T> tempC = constraint;
+//				System.out.println("CHECKING CONSTRAINT: " + tempC.toString());
+//				ArrayList<Variable<T>> others = new ArrayList<Variable<T>>();
+//				if(tempC.contains(tempV)) others = tempC.variablesInvolvedWith(tempV);
+//				else continue;
+//				System.out.println(tempV.name + " is involved with " + others.toString());
+//				//assign vals and check for violations
+//				ArrayList<Variable<T>> others2 = new ArrayList<Variable<T>>();
+//				
+//				for(Variable<T> var: this.variables) {
+//					Variable<T> varTemp = var;
+//					for(Variable<T> var2: others) {
+//						Variable<T> var2Temp = var2;
+//						if(varTemp.name.equals(var2Temp.name)) {
+//							var2Temp.value = varTemp.value;
+//							others2.add(var2Temp);
+//						}
+//					}
+//				}
+//				if(tempC.isViolated(others2, tempV)) return false;
+//			}
+//		}
+//		return true;
+//	}
+	
+	public boolean isConsistentAddition(Assignment<T> ass, Value<T> val, Variable<T> var, CSP<T> csp) {
 		var.value = val;
-		assignment.add(var);
-		if(assignment.isConsistent()) return true;
-		else return false;
+		csp.variables.add(var);
+		if(ass.isConsistent(csp)) {
+			
+			csp.variables.remove(var);
+			return true;
+		}
+		else{
+	
+			csp.variables.remove(var);
+			return false;
+		}
 		
 	}
+	
 	
 	public String toString() {
 		String str = "";

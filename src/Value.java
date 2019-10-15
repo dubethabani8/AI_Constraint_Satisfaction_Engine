@@ -5,4 +5,8 @@ public class Value<T> {
 	public Value(T val) {
 		this.val = val;
 	}
+	
+	public String toString() {
+		return "val=" + this.val;
+	}
 }

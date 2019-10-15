@@ -22,4 +22,10 @@ public class Variable<T> {
 		return this.domain.size();
 	}
 	
+	public String toString() {
+		if(this.value != null)
+			return this.name + "-" +  value.val;
+		else return this.name + "-" +  "NONE";
+	}
+	
 }

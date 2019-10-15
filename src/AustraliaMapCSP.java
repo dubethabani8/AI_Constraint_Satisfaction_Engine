@@ -21,9 +21,17 @@ protected class NotEqualConstraint extends Constraint<Color>{
 		@Override
 		public boolean isViolated(ArrayList<Variable<Color>> variables, Variable<Color> variable) { //problem specific - overridden by child classes
 			for(Variable<Color> var: variables) {
-				if(var.value.val == variable.value.val) return true;
+				if(var.value == null) return false;
+				if( var.value.val == variable.value.val) return true;
 			}
 			return false;
+		}
+		
+		@Override
+		public ArrayList<Variable<Color>> variablesInvolvedWith(Variable<Color> variable) { //returns varaibles from tupple other than this one
+			ArrayList<Variable<Color>> temp = this.tuple;
+			temp.remove(variable);
+			return temp;
 		}
 	}
 	/**
@@ -45,26 +53,38 @@ protected class NotEqualConstraint extends Constraint<Color>{
 		Variable<Color> SA = new Variable<Color>("SA", this.universalDomain);
 		Variable<Color> T = new Variable<Color>("T", this.universalDomain);
 		this.variables = new ArrayList<Variable<Color>>();
+		this.variables.add(SA);
 		this.variables.add(WA);
 		this.variables.add(NT);
 		this.variables.add(Q);
 		this.variables.add(NSW);
 		this.variables.add(V);
-		this.variables.add(SA);
+		
 		this.variables.add(T);
 		this.constraints = new ArrayList<Constraint<Color>>();
-		this.constraints.add(new NotEqualConstraint(SA, WA));
-		this.constraints.add(new NotEqualConstraint(SA, NT));
-		this.constraints.add(new NotEqualConstraint(SA, Q));
-		this.constraints.add(new NotEqualConstraint(SA, NSW));
-		this.constraints.add(new NotEqualConstraint(SA, V));
-		this.constraints.add(new NotEqualConstraint(WA, NT));
-		this.constraints.add(new NotEqualConstraint(NT, Q));
-		this.constraints.add(new NotEqualConstraint(Q, NSW));
-		this.constraints.add(new NotEqualConstraint(NSW, V));
+		Constraint<Color> SA_WA = new NotEqualConstraint(SA, WA);
+		Constraint<Color> SA_NT = new NotEqualConstraint(SA, NT);
+		Constraint<Color> SA_Q = new NotEqualConstraint(SA, Q);
+		Constraint<Color> SA_NSW = new NotEqualConstraint(SA, NSW);
+		Constraint<Color> SA_V = new NotEqualConstraint(SA, V);
+		Constraint<Color> WA_NT = new NotEqualConstraint(WA, NT);
+		Constraint<Color> NT_Q = new NotEqualConstraint(NT, Q);
+		Constraint<Color> Q_NSW = new NotEqualConstraint(Q, NSW);
+		Constraint<Color> V_NSW = new NotEqualConstraint(V, NSW);
+		this.constraints.add(SA_WA);
+		this.constraints.add(SA_NT);
+		this.constraints.add(SA_Q);
+		this.constraints.add(SA_NSW);
+		this.constraints.add(SA_V);
+		this.constraints.add(WA_NT);
+		this.constraints.add(NT_Q);
+		this.constraints.add(Q_NSW);
+		this.constraints.add(V_NSW);
 	}
 
 	public static void main(String[] args) {
+	
+		
 		System.out.println("Australia Map Coloring Problem (AIMA 6.1.1)");
 		CSP<Color> csp = new AustraliaMapCSP();
 		System.out.println(csp);
@@ -74,6 +94,6 @@ protected class NotEqualConstraint extends Constraint<Color>{
 		Assignment<Color> result = solver.solve(csp);
 		long end = new Date().getTime();
 		System.out.format("time: %.3f secs\n", (end-start)/1000.0);
-		System.out.println("result=" + result.toString());
+		System.out.println("\nResult:\n" + result.toString());
 	}
 }
